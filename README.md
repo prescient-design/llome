@@ -39,3 +39,8 @@ LLOME-MargE:
 ```
 python -m run_pipeline --config-name=pipeline_marge_f2 local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
 ```
+
+LLOME-DPO:
+```
+python -m run_pipeline --config-name=pipeline_dpo_f2 local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
+```
