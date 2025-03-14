@@ -1,0 +1,9 @@
+data_path: s3://prescient-data-dev/sandbox/chena78/pipelines/sft_EleutherAI/pythia-2.8b_ehrlich_s8_d128_m8_l8_r10_s2000_ga_steps30_p1000_pm0.005_xthres0.25/sft_r0_dense_neighborhood_pairs_xthres0.25_maxinfs0.1_30nn.jsonl
+model_name_or_path: s3://prescient-data-dev/sandbox/chena78/pipelines/sft_EleutherAI/pythia-2.8b_ehrlich_s8_d128_m8_l8_r10_s2000_ga_steps30_p1000_pm0.005_xthres0.25/sft_EleutherAI/pythia-2.8b_ehrlich_s8_d128_m8_l8_r10_s2000_ga_steps30_p1000_pm0.005_xthres0.25_sft_r0/
+batch_size: 4
+output_dir: s3://prescient-data-dev/sandbox/chena78/pipelines/sft_EleutherAI/pythia-2.8b_ehrlich_s8_d128_m8_l8_r10_s2000_ga_steps30_p1000_pm0.005_xthres0.25/sft_EleutherAI/pythia-2.8b_ehrlich_s8_d128_m8_l8_r10_s2000_ga_steps30_p1000_pm0.005_xthres0.25_sft_r0/
+output_filename: scores_of_training_data.jsonl
+log_level: info
+input_field: "higher_score_particle"
+target_field: "lower_score_particle"
+sanity_check: False

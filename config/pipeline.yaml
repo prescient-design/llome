@@ -1,0 +1,236 @@
+log_level: info
+run_name: test
+parent_output_dir: s3://prescient-data-dev/sandbox/chena78/pipelines  # all run info will be stored in {parent_output_dir}/{run_name}
+local_output_dir: /homefs/home/chena78/sherpa_pipelines
+overwrite: False  # If False, will only run job when output file does not already exist.
+run_evol_dataset_gen: True
+run_propen_sft_dataset_formatting: True
+run_sft: True
+run_iter_gen: True
+run_propen_dpo_dataset_formatting: True
+generation_sampling_num_return_sequences: 10
+num_labels_after_first_round: 1000 # num. of labels to use in all rounds after the first
+proportion_of_old_data: 0.0  # proportion of the training dataset that will contain old data
+seed: 0
+temperature_scaling: False
+job_submission_system: slurm # choices: slurm, lsf
+greedy_gen_batch_size: 4
+sampling_gen_batch_size: 1
+initial_model: "EleutherAI/pythia-2.8b"
+conda_env: "sherpa"
+sanity_check: False  # will be propagated to all training + generation jobs
+
+num_dpo_rounds: 0
+num_sft_rounds: 1
+num_marge_rounds: 0
+
+evol_dataset_gen:
+  args:
+    optimizer:
+      num_particles: 1000
+      mutation_prob: 0.005
+    test_function:
+      num_states: 16
+      dim: 32
+      num_motifs: 4
+      motif_length: 4
+      quantization: null
+    random_seed: 0
+    log_interval: 1
+    log_level: info
+    num_opt_steps: 5 # 512
+    project_name: sherpa
+    exp_name: dry_run
+    job_name: test_sherpa
+    # Dataset generation parameters
+    num_test_fns: 1
+    # Hyperparameters to run iterations of the GA for
+    hyperparameter_ranges:
+      survival_quantile: [0.1] # [0.0001] # [0.02, 0.1]
+      # mutation_prob: [0.25] # [0.1, 0.25]
+  slurm_args:
+  # run on single gpu
+    nodes: 1
+    cpus_per_task: 1
+    ntasks_per_node: 1
+    gpus_per_node: 1
+    partition: "gpu2"
+    open_mode: "append"
+    export: "ALL"
+    time: "48:00:00"
+    mem: "100GB"
+
+propen_dataset_formatting_sft:
+  args:
+    dist_x_threshold: 0.25
+    max_proportion_infeasible: 0.1  # the maximum proportion of the dataset that infeasible examples
+                                    # or pairs containing infeasible examples can be
+    distance_metric: "hamming"
+    seed: 0
+    n_neighbors: 30  # how many approx. nearest neighbors to compute -- higher is more accurate but more expensive
+    filter_by_likelihood: True
+    likelihood_quantile_threshold: 0.6
+    filter_by_likelihood_range: False
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 1
+    ntasks_per_node: 1
+    partition: "himem"
+    open_mode: "append"
+    export: "ALL"
+    time: "192:00:00"
+    mem: "100GB"
+
+
+propen_dataset_formatting_preference:
+  args:
+    dist_x_threshold: 0.25
+    max_proportion_infeasible: 0.1  # the maximum proportion of the dataset that infeasible examples
+                                    # or pairs containing infeasible examples can be
+    distance_metric: "hamming"
+    seed: 0
+    n_neighbors: 30  # how many approx. nearest neighbors to compute -- higher is more accurate but more expensive
+    filter_by_likelihood: True
+    likelihood_quantile_threshold: 0.6
+    filter_by_likelihood_range: False
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 1
+    ntasks_per_node: 1
+    partition: "himem"
+    open_mode: "append"
+    export: "ALL"
+    time: "192:00:00"
+    mem: "100GB"
+
+
+sft:
+  args:
+    training_args:
+      num_train_epochs: 1
+      seed: 0
+      eval_steps: 0.1
+      save_steps: 0.2
+      learning_rate: 1e-6
+      per_device_train_batch_size: 2
+      per_device_eval_batch_size: 8
+      eval_accumulation_steps: 2
+      gradient_accumulation_steps: 32
+      max_seq_length: 512
+      log_level: "info"
+
+    generation_config:  # use greedy decoding during evaluation
+      max_new_tokens: 256
+      num_beams: 1
+      do_sample: False
+      num_return_sequences: 1
+
+    model_config:
+      model_name_or_path: "EleutherAI/pythia-2.8b"
+      attn_implementation: "eager"
+    train_size: 0.95
+    max_eval_size: 100 # evaluation takes a long time, so we set a max. size on the eval dataset
+    seq_length: 512
+    format_type: "edit_pairs"
+    # test function
+    test_fn_type: "ehrlich"  # [ehrlich, mt_fuji]
+
+    # instrumentation
+    log_level: "info"
+    project_name: "finetune_ehrlich"
+    exp_name: "finetune_pythia-2.8b"
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 2
+    ntasks_per_node: 2
+    gpus_per_node: 2
+    partition: "gpu2"
+    open_mode: "append"
+    export: "ALL"
+    time: "48:00:00"
+    mem: "100GB"
+
+iterative_generation:
+  num_jobs: 6  # number of generation jobs to parallelize this over
+  args:
+    sanity_check: False
+    sample_size: 200
+    max_iterations: 10
+    log_level: info
+    seed: 0
+    test_fn_type: "ehrlich"  # [ehrlich, mt_fuji]
+    sampling_method: "best_scoring" # "uniform", "combination", "best_scoring"
+    generation_config:
+      max_new_tokens: 500
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 1
+    ntasks_per_node: 1
+    gpus_per_node: 1
+    partition: "gpu2"
+    open_mode: "append"
+    export: "ALL"
+    time: "48:00:00"
+    mem: "100GB"  
+
+dpo:
+  args:
+    dpo_config:
+      learning_rate: 1e-7
+      beta: 0.4
+      gradient_accumulation_steps: 16
+      num_train_epochs: 1
+      eval_steps: 0.1
+      save_steps: 0.2
+      per_device_train_batch_size: 2
+      per_device_eval_batch_size: 8
+      max_length: 512
+      max_prompt_length: 256
+      log_level: "info"
+    test_fn_type: "ehrlich"
+    train_size: 0.95
+    max_eval_size: 100
+    generation_config:
+      max_new_tokens: 256
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 2
+    ntasks_per_node: 2
+    gpus_per_node: 2
+    partition: "gpu2"
+    open_mode: "append"
+    export: "ALL"
+    time: "48:00:00"
+    mem: "200GB"
+
+marge:
+  args:
+    marge_config:
+      learning_rate: 1e-6
+      alpha: 1.0
+      beta: 10.0
+      gradient_accumulation_steps: 16
+      num_train_epochs: 1
+      eval_steps: 0.1
+      save_steps: 0.2
+      self_normalize_weights: False
+      reinforce_style: False
+      max_length: 512
+      max_prompt_length: 256
+      log_level: "info"
+    test_fn_type: "ehrlich"
+    train_size: 0.95
+    max_eval_size: 100
+    generation_config:
+      max_new_tokens: 256
+  slurm_args:
+    nodes: 1
+    cpus_per_task: 2
+    ntasks_per_node: 2
+    gpus_per_node: 2
+    partition: "gpu2"
+    open_mode: "append"
+    export: "ALL"
+    time: "48:00:00"
+    mem: "200GB"
+ 
