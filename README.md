@@ -26,6 +26,8 @@ python -m run_pipeline --config-name=pipeline_sanity_check_marge local_output_di
 - **Analyzing results**: To assess the performance of the LLM at iteration $i$, analyze the *training data* generated for iteration $i+1$ -- this accounts for both the likelihood-based ranking and filtering of the LLM at iteration $i$.
 
 ## To reproduce experiments
+**Note**: Update the `slurm_args` section in each config before running your experiment!
+
 ### For function $f_2$:
 
 LLOME-SFT:
