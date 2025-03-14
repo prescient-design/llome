@@ -3,7 +3,7 @@
 This is the repository for the paper ["Generalists vs. Specialists: Evaluating LLMs on Highly-Constrained Biophysical Sequence Optimization Tasks,"](https://arxiv.org/abs/2410.22296) by Angelica Chen<sup>\*</sup>, Samuel D. Stanton<sup>\*</sup>, Frances Ding, Robert G. Alberstein, Andrew M. Watkins, Richard Bonneau, Vladimir Gligorijević, Kyunghyun Cho, Nathan C. Frey
 
 ## Set-Up
-1. Clone this repo to your home directory! (Some of the scripts in this repo assume that your code is stored in `~/sherpa`.)
+1. Clone this repo to your home directory! (Some of the scripts in this repo assume that your code is stored in `~/llome`.)
 1. Install the requirements in a virtual environment: 
 ```
 uv venv --python 3.10

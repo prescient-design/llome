@@ -87,7 +87,7 @@ def submit_cmd_to_slurm(
     setup_str: str = "",  # setup  that goes between sbatch args and running the py_cmd
     **slurm_kwargs,
 ) -> Tuple[subprocess.Popen, str]:
-    sbatch_str = f"source ~/.bashrc\nconda deactivate\nconda activate {conda_env}\ncd ~/sherpa\n{py_cmd}"
+    sbatch_str = f"source ~/.bashrc\ncd ~/llome\nsource .venv/bin/activate\n{py_cmd}"
     # add #SBATCH commands on top
     if "output" not in slurm_kwargs:
         slurm_kwargs["output"] = f"{dump_dir}/%x_%j.logs"
