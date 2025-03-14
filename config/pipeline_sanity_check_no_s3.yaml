@@ -1,7 +1,7 @@
 log_level: info
 run_name: sanity_check_no_s3_marge
 parent_output_dir: null
-local_output_dir: /homefs/home/chena78/sherpa_pipelines
+local_output_dir: null
 overwrite: False  # If False, will only run job when output file does not already exist.
 run_evol_dataset_gen: True
 run_propen_sft_dataset_formatting: True
