@@ -1,5 +1,5 @@
 log_level: info
-run_name: sft_f2
+run_name: marge_f2
 parent_output_dir: null  # all run info will be stored in {parent_output_dir}/{run_name}
 local_output_dir: null
 overwrite: False  # If False, will only run job when output file does not already exist.
@@ -40,8 +40,8 @@ evol_dataset_gen:
     log_level: info
     num_opt_steps: 10
     project_name: llome
-    exp_name: llome_sft
-    job_name: llome_sft
+    exp_name: llome_marge
+    job_name: llome_marge
     # Dataset generation parameters
     num_test_fns: 1
     # Hyperparameters to run iterations of the GA for

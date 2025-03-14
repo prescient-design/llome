@@ -1,5 +1,7 @@
 # LLOME
 
+This is the repository for the paper ["Generalists vs. Specialists: Evaluating LLMs on Highly-Constrained Biophysical Sequence Optimization Tasks,"](https://arxiv.org/abs/2410.22296) by Angelica Chen<sup>\*</sup>, Samuel D. Stanton<sup>\*</sup>, Frances Ding, Robert G. Alberstein, Andrew M. Watkins, Richard Bonneau, Vladimir Gligorijević, Kyunghyun Cho, Nathan C. Frey
+
 ## Set-Up
 1. Clone this repo to your home directory! (Some of the scripts in this repo assume that your code is stored in `~/sherpa`.)
 1. Install the requirements in a virtual environment: 
@@ -24,3 +26,13 @@ python -m run_pipeline --config-name=pipeline_sanity_check_marge local_output_di
 - **Analyzing results**: To assess the performance of the LLM at iteration $i$, analyze the *training data* generated for iteration $i+1$ -- this accounts for both the likelihood-based ranking and filtering of the LLM at iteration $i$.
 
 ## To reproduce experiments
+### For function $f_2$:
+
+LLOME-SFT:
+```python -m run_pipeline --config-name=pipeline_sft_f2.yaml local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
+```
+
+LLOME-MargE:
+```
+python -m run_pipeline --config-name=pipeline_marge_f2.yaml local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
+```
