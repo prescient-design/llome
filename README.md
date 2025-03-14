@@ -32,10 +32,10 @@ python -m run_pipeline --config-name=pipeline_sanity_check_marge local_output_di
 
 LLOME-SFT:
 ```
-python -m run_pipeline --config-name=pipeline_sft_f2.yaml local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
+python -m run_pipeline --config-name=pipeline_sft_f2 local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
 ```
 
 LLOME-MargE:
 ```
-python -m run_pipeline --config-name=pipeline_marge_f2.yaml local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
+python -m run_pipeline --config-name=pipeline_marge_f2 local_output_dir=<PATH_TO_LOCAL_OUTPUT_DIR> parent_output_dir=<S3_OUTPUT_DIR>
 ```
